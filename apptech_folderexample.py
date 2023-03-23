@@ -1,4 +1,8 @@
 # %%
+#유선연결 확인 
+!adb devices
+
+# %%
 #mobile화면보기 
 !scrcpy
 # %%
@@ -6,7 +10,7 @@
 !adb disconnect
 !adb kill-server
 !adb tcpip 5555
-!adb connect 192.168.0.5:5555 # wifi ip 주소 입력 
+!adb connect xxx.xxx.x.xx:5555 # wifi ip 주소 입력 
 
 # %% 
 from ppadb.client import Client
@@ -17,9 +21,7 @@ from datetime import datetime
 import time
 import requests
 import os
-
 #adb 연결
-
 def connect():
     client = Client(host='127.0.0.1', port=5037) # Default is "127.0.0.1" and 5037
     devices = client.devices()
@@ -32,25 +34,12 @@ def connect():
     print(f'Connected to {device}')
     return device, client
 
-device, client = connect()
+def send_message(msg):
+    now = datetime.now().strftime("%m/%d - %H:%M")
+    message = {"content": f'{now} : {str(msg)}'}
+    requests.post(DISCORD_WEBHOOK_URL,data = message)
 
 
-# %%
-device.input_keyevent('KEYCODE_SLEEP')
-# %%
-device.input_keyevent('KEYCODE_WAKEUP')
-# %%
-device.input_keyevent('KEYCODE_BACK')
-# %%
-device.input_keyevent('KEYCODE_HOME')
-# %%
-device.input_keyevent('KEYCODE_BACK')
-
-# %%
-# device.input_tap() 매크로 걸릴 수 있으므로 사용하지 않는다.
-# device.input_swipe(시작점x좌표,시작점y좌표,끝점x좌표,끝점y좌표,누르는시간(ms))
-
-#screenshot 저장
 def save_cap(name):
     '''
     현재화면 캡처해서 png파일로 저장하는 함수
@@ -63,18 +52,6 @@ def save_cap(name):
     if app_title not in os.listdir('./'):
         os.makedirs(app_title, exist_ok=True)
     cv2.imwrite('./' + app_title + '/'+ name + '.png',img)
-
-save_cap('example_3')
-
-# %%
-#탭하기
-device.input_swipe(544,1848,523,846,300)
-# %%
-#스와이프하기
-device.input_swipe(0,0,0,1000,1000)
-
-# %%
-# 조금 더 복잡한 조작
 
 #전체화면 capture
 def capture():
@@ -174,60 +151,42 @@ def searchandclick(name,waitingtime):
             if len(search(img,name)) == 0 :
                 break
 
-# %%
-#1. 현재화면 caputre -> 이미지
-#2. 미리 만들어놓은 이미지 -> template
-#3. 이미지와 탬플릿 비교해서 같은 이미지가 있는지 확인
 
-#ex1) 앱 눌러서 들어가기 
-
-# template만들기
-save_cap('folder_app')
-# %%
-# 현재 화면 capture
-img = capture()
-# %%
-#이미지와 탬플릿 비교 
-search(img,'folder_app')
-# %%
-#인식 하기
-len(search(img,'folder_app'))
+device, client = connect()
+# Discord WebHook붙여넣기
+DISCORD_WEBHOOK_URL = ''
 
 # %%
-#인식한 것 바탕으로 행동 명령하기
-if len(search(img,'folder_app'))>0 :
-    picture_click(img, 'folder_app')
+device.input_keyevent('KEYCODE_WAKEUP')
+device.input_keyevent('KEYCODE_HOME')
 
-# %%
-# 최종
-img = capture()
-if len(search(img,'folder_app'))>0 :
-    picture_click(img, 'folder_app')
+for i in range(10) :
+    img=capture()
+    if len(search(img,'common_1'))>0 : 
+        device.input_swipe(549,1856,549,741,600)
+    elif len(search(img,'common_home'))>0 : 
+        random_click(218,2133,251,2168)
+    elif len(search(img,'common_allclose'))>0 : 
+        picture_click(img,'common_allclose')
+        break
+    elif len(search(img,'common_allclose2'))>0 : 
+        device.input_keyevent('KEYCODE_HOME')
+        break
+    time.sleep(1)
 
-# -> 이게 기본이지만, 이렇게만 쓰면
-# 로딩 때문에 해당 이미지가 제대로 인식이 안될 수도 있고,
-# click이 제대로 안될경우가 있을 수 있음.
-# 자동화 문제발생 방어막 필요
+send_message('folder_app시작')
+searchandclick('folder_app',7)
 
-
-# %%
-# 직접 작성해보기
-
-
-
-
-
-
-
-
-
-
-
-# %%
-#searchand click 코드 설명 
-
-searchandclick('folder_app',3)
-
-
-
-
+for i in range(10):
+    img=capture()
+    if len(search(img,'folder_name'))>0 : 
+        send_message('folder_app성공')
+        device.input_keyevent('KEYCODE_HOME')
+        break
+    elif len(search(img,'folder_ad'))>0 : 
+        picture_click(img,'folder_ad')
+    elif len(search(img,'folder_ad2'))>0 : 
+        picture_click(img,'folder_ad2')
+    elif len(search(img,'folder_myfolder'))>0 : 
+        picture_click(img,'folder_myfolder')
+    time.sleep(1)
