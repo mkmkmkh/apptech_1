@@ -64,7 +64,7 @@ def save_cap(name):
         os.makedirs(app_title, exist_ok=True)
     cv2.imwrite('./' + app_title + '/'+ name + '.png',img)
 
-save_cap('example_3')
+save_cap('example_1')
 
 # %%
 #탭하기
