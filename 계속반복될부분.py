@@ -8,6 +8,8 @@ import datetime
 import time
 import requests
 import os
+import subprocess
+
 
 
 
@@ -27,6 +29,9 @@ def connect():
 device, client = connect()
 
 
+
+
+#%%
 def save_cap(name):
     '''
     현재화면 캡처해서 png파일로 저장하는 함수
@@ -39,8 +44,8 @@ def save_cap(name):
     if app_title not in os.listdir('./'):
         os.makedirs(app_title, exist_ok=True)
     cv2.imwrite('./' + app_title + '/'+ name + '.png',img)
-
-
+    subprocess.Popen(["mspaint", ""])
+# %%
 
 #전체화면 capture 함수정의
 def capture():
@@ -49,6 +54,7 @@ def capture():
     img = img[:,:,:3]
     return img
 
+
 # ★ search함수 
 def search(img,name,threshold=0.8):
     '''
@@ -56,14 +62,91 @@ def search(img,name,threshold=0.8):
     name = 비교할 이미지 (미리 저장해놓은 file)
     threshold = 일치율 지정 ( 기본 0.8 )
     '''
-    templ = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_template.png', cv2.IMREAD_COLOR)
+    templ = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
     # img = cv2.resize(img,dsize=None,fx=0.4,fy=0.4)
     # templ = cv2.resize(templ,dsize=None,fx=0.4,fy=0.4)
     res = cv2.matchTemplate(img,templ,cv2.TM_CCOEFF_NORMED)
     threshold = threshold
     loc = np.where(res >= threshold)
     ziloc = list(zip(*loc[::-1]))
+    
     return ziloc
+
+#%%
+#함수 merge-location 한 그림은 한번만 카운트 되게 하는 함수
+def merge_locations(ziloc, distance=10):
+    merged_ziloc = []
+    for i in range(len(ziloc)):
+        try:
+            x1, y1 = ziloc[i][0], ziloc[i][1]
+        except:
+            break
+        min_x, min_y = x1, y1
+        for j in range(len(ziloc)-1, i, -1):
+            try:
+                x2, y2 = ziloc[j][0], ziloc[j][1]
+            except:
+                break
+            dist = (abs(x1-x2)+abs(y1-y2))/2
+            if dist < distance:
+                ziloc.pop(j)
+                if x2 < min_x:
+                    min_x = x2
+                if y2 < min_y:
+                    min_y = y2        
+        merged_ziloc.append((min_x, min_y))
+    return merged_ziloc
+
+
+#%%
+
+def search_merge(img,name,threshold=0.8):
+    '''
+    img = 현재화면 캡처
+    name = 비교할 이미지 (미리 저장해놓은 file)
+    threshold = 일치율 지정 ( 기본 0.8 )
+    '''
+    templ = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
+    # img = cv2.resize(img,dsize=None,fx=0.4,fy=0.4)
+    # templ = cv2.resize(templ,dsize=None,fx=0.4,fy=0.4)
+    res = cv2.matchTemplate(img,templ,cv2.TM_CCOEFF_NORMED)
+    threshold = threshold
+    loc = np.where(res >= threshold)
+    ziloc = list(zip(*loc[::-1]))
+    ziloc = merge_locations(ziloc)
+    #textcode
+    return ziloc
+
+def picture_click_byrate_merge(n,img,name,threshold):
+    '''
+    현재화면(img) 과 template(name) 비교해서,
+    일치하는 이미지 있으면 클릭한다.
+    '''
+    ziloc = search_merge(img,name,threshold)
+    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
+    h, w = basic_template.shape[:-1]
+
+    x1 = ziloc[n-1][0]
+    y1 = ziloc[n-1][1]
+    random_click_picture(x1, y1, w, h)
+    print(f'click {n}th picture of {name}')
+    
+def searchandclick_byrate_merge(n,name,waitingtime,threshold):
+    '''
+    클릭 후 화면 바뀌는 경우가 자주 있어서, searchandclick 함수 생성
+    screenshot → 이미지(name)찾기 → click → 이미지 사라졌는지 check
+    watingtime = click후 대기 시간 지정
+    
+    '''
+    for i in range(10):
+        img = capture()
+        if len(search_merge(img,name,threshold))>0 :
+            picture_click_byrate_merge(n,img,name,threshold)
+            time.sleep(waitingtime)
+            img = capture()
+            if len(search_merge(img,name,threshold)) == 0 :
+                break
+
 
 # 저장해논 사진 범위 내로 임의 클릭/ picture_click 함수와 사용
 def random_click_picture(x1,y1,w,h):
@@ -79,7 +162,7 @@ def picture_click(img,name):
     일치하는 이미지 있으면 클릭한다.
     '''
     ziloc = search(img,name)
-    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_template.png', cv2.IMREAD_COLOR)
+    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
     h, w = basic_template.shape[:-1]
     x1 = ziloc[0][0]
     y1 = ziloc[0][1]
@@ -92,7 +175,7 @@ def picture_click_byrate(img,name,threshold):
     일치하는 이미지 있으면 클릭한다.
     '''
     ziloc = search(img,name,threshold)
-    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_template.png', cv2.IMREAD_COLOR)
+    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
     h, w = basic_template.shape[:-1]
     x1 = ziloc[0][0]
     y1 = ziloc[0][1]
@@ -168,7 +251,7 @@ def picture_click_position(img,name,position):
     '''
     position=position
     ziloc = search(img,name)
-    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_template.png', cv2.IMREAD_COLOR)
+    basic_template = cv2.imread('./'+ name[:name.find('_')]+ '/'+ name + '_t.png', cv2.IMREAD_COLOR)
     h, w = basic_template.shape[:-1]
     x1 = ziloc[0][0]
     y1 = ziloc[0][1]
@@ -216,13 +299,27 @@ device.input_keyevent('KEYCODE_SLEEP')
 device.input_keyevent('KEYCODE_WAKEUP')
 # %%
 device.input_keyevent('KEYCODE_HOME')
-# # %%
-# device.input_keyevent('KEYCODE_BACK')
-# %%
+
+
 # 앱실행
+# %%
 searchandclick('geniediet_1',3)
 time.sleep(waitingtime)
 
-
+# %%마지막에 지워줘야해
 save_cap('geniediet_1')
+
+
 # %%
+# # 스와이프해서 아래로 내리기
+# device.input_swipe(0,1000,0,0,1000)
+# # %%
+# device.input_keyevent('KEYCODE_BACK')
+
+
+#%%
+device.input_keyevent('KEYCODE_APP_SWITCH')
+
+searchandclick('qnn24_allappclose',3)
+time.sleep(waitingtime)
+
