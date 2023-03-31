@@ -288,20 +288,33 @@ def searchandclick_byrate_merge(n,name,waitingtime,threshold):
 #%%
 
 waitingtime = 3
-
+#%%
 
 device.input_keyevent('KEYCODE_SLEEP')
-
+time.sleep(0.5)
+# %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
+# %%
+device.input_keyevent('KEYCODE_HOME')
+time.sleep(waitingtime)
+device.input_keyevent('KEYCODE_HOME')
+
+## 폰 화면 처음 상태로 리셋 ##########################################
+
+device.input_keyevent('KEYCODE_APP_SWITCH')
+
+searchandclick('geniediet_allappclose',3)
+time.sleep(waitingtime)
 
 device.input_keyevent('KEYCODE_HOME')
 
 # device.input_keyevent('KEYCODE_BACK')
-
+#%%
 # 앱실행
 searchandclick('geniediet_1',3)
-time.sleep(waitingtime)
-
+time.sleep(waitingtime*2)
+#%%
 
 #광고끄기
 searchandclick('geniediet_ad1',3)
@@ -326,29 +339,31 @@ searchandclick_byposition('geniediet_weight',3,15)
 time.sleep(waitingtime)
 
 
-
+#%%
 # 체중 스와이프하기 ##이미지서치 후  있으면 스와이프 하도록 바꾸자
 today=datetime.date.today()
 
 if today.day % 2 == 0:
-    device.input_swipe(540,858,600,858,500)
+    device.input_swipe(540,910,600,910,500)
 # 날짜별로 다르게 설정해서 계속 움직이지만 결국 원래대로 돌아오도록 스와이프하기 31일이 들어간 달에면 조금 변하겟네
 else:
-    device.input_swipe(600,858,540,858,500)
+    device.input_swipe(600,910,540,910,500)
 
+#%%
 
+#%%
 # 체중 진행
-searchandclick_byrate('geniediet_weight2',3,0.95)
+searchandclick_byrate('geniediet_weight2',3,0.99)
 time.sleep(waitingtime)
-
+#%%
 
 # 체중 진행/ 포인트 닫기버튼
-searchandclick('geniediet_pointclose',3)
+searchandclick_twice('geniediet_pointclose',3)
 time.sleep(waitingtime)
 
 
 # 체중 진행/ 확인버튼
-searchandclick('geniediet_ok',3)
+searchandclick_twice('geniediet_ok',3)
 time.sleep(waitingtime)
 
 
@@ -386,7 +401,7 @@ device.input_keyevent(10,1)
 device.input_keyevent(12,1)
 device.input_keyevent(66,1)
 #단백질10
-device.input_keyevent(10,1)
+device.input_keyevent(8,1)
 device.input_keyevent(0,1)
 #뒤로가기 키로 숫자패드내림
 device.input_keyevent('KEYCODE_BACK')
@@ -404,11 +419,11 @@ time.sleep(waitingtime)
 #뒤로가기 키로 원래 자리로
 device.input_keyevent('KEYCODE_BACK')
 
-
+#%%
 # 스와이프해서 아래로 내리기
-device.input_swipe(0,1000,0,0,1000)
+device.input_swipe(500,1500,500,0,1000)
 
-
+#%%
 # #물 부분
 
 
@@ -421,15 +436,21 @@ device.input_swipe(0,1000,0,0,1000)
 
 # #####식단부분################################
 
-
+# #%%
+# # 스크린샷
+# save_cap('geniediet_1')
+#%%
 
 
 # 아침부분 클릭
-searchandclick_byposition('geniediet_foodmain',3,0)
+searchandclick_byrate_merge(1,'geniediet_foodmain',3,0.95)
 time.sleep(waitingtime)
+#%%
 #단식했어요
 searchandclick_byrate('geniediet_foodnoeat',3,0.9)
 time.sleep(waitingtime)
+# 스와이프해서 아래로 내리기
+device.input_swipe(500,1500,500,0,1000)
 #저장
 searchandclick('geniediet_foodsave',3)
 time.sleep(waitingtime)
@@ -439,15 +460,17 @@ time.sleep(waitingtime)
 #뒤로가기 키로 원래 자리로
 device.input_keyevent('KEYCODE_BACK')
 device.input_keyevent('KEYCODE_BACK')
+time.sleep(waitingtime)
 
-
-
+#%%
 # 점심부분 클릭-아침을 입력하고나면 사진이 바뀌어서 2로 또 설정..
-searchandclick_byposition('geniediet_foodmain2',3,5)
+searchandclick_byrate_merge(1,'geniediet_foodmain',3,0.95)
 time.sleep(waitingtime)
 #단식했어요
 searchandclick_byrate('geniediet_foodnoeat',3,0.9)
 time.sleep(waitingtime)
+# 스와이프해서 아래로 내리기
+device.input_swipe(500,1500,500,0,1000)
 #저장
 searchandclick('geniediet_foodsave',3)
 time.sleep(waitingtime)
@@ -457,30 +480,33 @@ time.sleep(waitingtime)
 #뒤로가기 키로 원래 자리로
 device.input_keyevent('KEYCODE_BACK')
 device.input_keyevent('KEYCODE_BACK')
-
-
-
-
+time.sleep(waitingtime)
+#%%
+#스와이프 옆으로 밀기
+device.input_swipe(600,1296,100,1296,1000)
+time.sleep(waitingtime)
+#%%
 
 # 저녁부분 클릭
-searchandclick_byposition('geniediet_foodmain3',3,7)
+searchandclick_byrate_merge(1,'geniediet_foodmain',3,0.95)
 time.sleep(waitingtime)
 #단식했어요
 searchandclick_byrate('geniediet_foodnoeat',3,0.9)
 time.sleep(waitingtime)
+# 스와이프해서 아래로 내리기
+device.input_swipe(500,1500,500,0,1000)
 #저장
 searchandclick('geniediet_foodsave',3)
 time.sleep(waitingtime)
 #포인트닫기(조금다른지0.6으로 설정해야만 먹힘 0.8로는 인식못하나봄)
 searchandclick_byrate('geniediet_pointclose',3,0.6)
 time.sleep(waitingtime)
-#뒤로가기 키로 원래 자리로
-device.input_keyevent('KEYCODE_BACK')
-device.input_keyevent('KEYCODE_BACK')
+# #뒤로가기 키로 원래 자리로
+# device.input_keyevent('KEYCODE_BACK')
+# device.input_keyevent('KEYCODE_BACK')
 
 
-# 스와이프해서 아래로 내리기
-device.input_swipe(0,1000,0,0,1000)
+
 
 
 
@@ -488,7 +514,8 @@ device.input_swipe(0,1000,0,0,1000)
 # #####눈바디부분################################
 
 
-
+# 스와이프해서 아래로 내리기
+# device.input_swipe(0,1000,0,0,1000)
 
 # #정면
 
@@ -543,13 +570,14 @@ time.sleep(waitingtime)
 #엔터키: device.input_keyevent(66,1)
 #탭키: device.input_keyevent(61,1)
 
+# %%
+device.input_keyevent('KEYCODE_SLEEP')
 
 
-
-
+# #%%
 # # 스크린샷
 # save_cap('geniediet_1')
-
+# #%%
 
 
 # #탭하기

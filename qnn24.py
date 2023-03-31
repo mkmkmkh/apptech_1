@@ -94,9 +94,7 @@ def merge_locations(ziloc, distance=10):
                     min_x = x2
                 if y2 < min_y:
                     min_y = y2        
-        merged_ziloc.append((min_x, min_y))
-    print(len(ziloc))
-    print(merged_ziloc)        
+        merged_ziloc.append((min_x, min_y))        
     return merged_ziloc
 
 
@@ -148,8 +146,23 @@ def searchandclick_byrate_merge(n,name,waitingtime,threshold):
             img = capture()
             if len(search_merge(img,name,threshold)) == 0 :
                 break
-
-
+#%%
+def searchandclick_byrate_merge_pth(n,name,waitingtime,threshold=0.8,p=2):
+    '''
+    클릭 후 화면 바뀌는 경우가 자주 있어서, searchandclick 함수 생성
+    screenshot → 이미지(name)찾기 → click → 이미지 사라졌는지 check
+    watingtime = click후 대기 시간 지정
+    
+    '''
+    for i in range(p):
+        img = capture()
+        if len(search_merge(img,name,threshold))>0 :
+            picture_click_byrate_merge(n,img,name,threshold)
+            time.sleep(waitingtime)
+            img = capture()
+            if len(search_merge(img,name,threshold)) == 0 :
+                break
+#%%
 # 저장해논 사진 범위 내로 임의 클릭/ picture_click 함수와 사용
 def random_click_picture(x1,y1,w,h):
     new_x = random.randint(x1,x1+int(w))
@@ -300,29 +313,79 @@ waitingtime = 3
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_HOME')
+time.sleep(waitingtime)
 # # %%
 # device.input_keyevent('KEYCODE_BACK')
 # %%
-# 앱실행
+# 앱실행 #############################
 searchandclick('qnn24_stap',3)
 time.sleep(waitingtime*3)
 
 
+# %% 광고 끄기
+for i in range(4):
+    # 스와이프해서 아래로 내리기
+    device.input_swipe(500,800,500,0,1000)
+    #%%
+    searchandclick('qnn24_adend',3)
+    time.sleep(waitingtime)
+# %%
+
+
+
+
+#%% 로그인하기 #############################
+
+device.input_swipe(500,200,500,1000,1000)
+device.input_swipe(500,200,500,1000,1000)
+#%%
+searchandclick_byrate('qnn24_loginbn',3,0.99)
+time.sleep(waitingtime)
+#%%
+searchandclick_byrate('qnn24_pwbn',3,0.99)
+time.sleep(waitingtime)
+# %% pw입력 zx031263
+device.input_keyevent(54,1)
+device.input_keyevent(52,1)
+device.input_keyevent(0,1)
+device.input_keyevent(10,1)
+device.input_keyevent(8,1)
+device.input_keyevent(9,1)
+device.input_keyevent(13,1)
+device.input_keyevent(10,1)
+
+#%%
+searchandclick_byrate('qnn24_loginbn2',3,0.95)
+time.sleep(waitingtime)
+#%% ok
+searchandclick_byrate('qnn24_okbn',3,0.8)
+time.sleep(waitingtime*3)
+# %% 광고 끄기
+for i in range(4):
+    # 스와이프해서 아래로 내리기
+    device.input_swipe(500,800,500,0,1000)
+    #%%
+    searchandclick('qnn24_adend',3)
+    time.sleep(waitingtime)
+
+
 
 # %%
-# 꺽쇠달린 기사보기 실행
-for i in range(1,10):
-    searchandclick_byrate_merge(i%3,'qnn24_ni',3,0.8)
-    time.sleep(9)##고정시간10초 = %채워지는시간
+# 꺽쇠달린 기사보기 실행 #############################
+for i in range(1,12):
+    searchandclick_byrate_merge_pth(i%3,'qnn24_ni',3)
+    time.sleep(11)##고정시간10초 = %채워지는시간
     device.input_keyevent('KEYCODE_BACK')
 device.input_keyevent('KEYCODE_BACK')
 for i in range(1, 12):
-    searchandclick_byrate_merge(i%3,'qnn24_ni',3,0.8)
-    time.sleep(9)##고정시간10초 = %채워지는시간
+    searchandclick_byrate_merge_pth(i%3,'qnn24_ni',3)
+    time.sleep(11)##고정시간10초 = %채워지는시간
     device.input_keyevent('KEYCODE_BACK')
     
 

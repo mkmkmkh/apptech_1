@@ -9,7 +9,7 @@ import time
 import requests
 import os
 import subprocess
-
+import keyboard
 
 
 
@@ -44,7 +44,6 @@ def save_cap(name):
     if app_title not in os.listdir('./'):
         os.makedirs(app_title, exist_ok=True)
     cv2.imwrite('./' + app_title + '/'+ name + '.png',img)
-    subprocess.Popen(["mspaint", ""])
 # %%
 
 #전체화면 capture 함수정의
@@ -131,7 +130,7 @@ def picture_click_byrate_merge(n,img,name,threshold):
     random_click_picture(x1, y1, w, h)
     print(f'click {n}th picture of {name}')
     
-def searchandclick_byrate_merge(n,name,waitingtime,threshold):
+def searchandclick_byrate_merge(n,name,waitingtime,threshold=0.8):
     '''
     클릭 후 화면 바뀌는 경우가 자주 있어서, searchandclick 함수 생성
     screenshot → 이미지(name)찾기 → click → 이미지 사라졌는지 check
@@ -139,6 +138,22 @@ def searchandclick_byrate_merge(n,name,waitingtime,threshold):
     
     '''
     for i in range(10):
+        img = capture()
+        if len(search_merge(img,name,threshold))>0 :
+            picture_click_byrate_merge(n,img,name,threshold)
+            time.sleep(waitingtime)
+            img = capture()
+            if len(search_merge(img,name,threshold)) == 0 :
+                break
+            
+def searchandclick_byrate_merge_pth(n,name,waitingtime,threshold=0.8,p=2):
+    '''
+    클릭 후 화면 바뀌는 경우가 자주 있어서, searchandclick 함수 생성
+    screenshot → 이미지(name)찾기 → click → 이미지 사라졌는지 check
+    watingtime = click후 대기 시간 지정
+    
+    '''
+    for i in range(p):
         img = capture()
         if len(search_merge(img,name,threshold))>0 :
             picture_click_byrate_merge(n,img,name,threshold)
@@ -295,20 +310,37 @@ waitingtime = 3
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_HOME')
-
-
-# 앱실행
-# %%
-searchandclick('geniediet_1',3)
 time.sleep(waitingtime)
 
-# %%마지막에 지워줘야해
-save_cap('geniediet_1')
+#%%
+# 앱실행
+searchandclick('newapp_1',3)
+time.sleep(waitingtime)
 
+# %%
+n=10#클릭할 총 사진 수로 변경
+for i in range(2, n):
+    searchandclick(f'newapp_{i}',3)
+    time.sleep(waitingtime)
+
+
+
+# %%마지막에 지워줘야해
+# 스크린샷 save 순서대로 하기위해 한번에 쭉 실행하는 코드#############
+
+k=0
+while True:
+    if keyboard.is_pressed('\t'):
+        k=k+1
+        save_cap(f'newapp_{k}_t')
+    if keyboard.is_pressed('esc'):
+        break
 
 # %%
 # # 스와이프해서 아래로 내리기
@@ -323,3 +355,5 @@ device.input_keyevent('KEYCODE_APP_SWITCH')
 searchandclick('qnn24_allappclose',3)
 time.sleep(waitingtime)
 
+# %%
+device.input_keyevent('KEYCODE_SLEEP')

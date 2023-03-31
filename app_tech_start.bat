@@ -7,4 +7,3 @@ timeout /t 3
 adb start-server
 timeout /t 3
 scrcpy
-cmd.exe

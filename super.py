@@ -315,10 +315,13 @@ waitingtime = 3
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_HOME')
+time.sleep(waitingtime)
 # # %%
 # device.input_keyevent('KEYCODE_BACK')
 # %%
@@ -360,52 +363,128 @@ device.input_keyevent('KEYCODE_BACK')
 
 
 
-###### 설문 부분 ############
+# # ###### 설문 부분 ############
 
-# %%
-# 스와이프해서 위로 올리기
-device.input_swipe(0,500,0,1500,500)
+# # %%
+# # 스와이프해서 위로 올리기
+# device.input_swipe(0,500,0,1500,500)
 
-#%% 설문조사 탭 클릭
-searchandclick_byrate('super_survey1',3,0.95)
-time.sleep(waitingtime)
+# #%% 설문조사 탭 클릭 
+# searchandclick_byrate('super_survey1',3,0.95)
+# time.sleep(waitingtime)
 
-#%% 설문조사 form 클릭
-searchandclick_byrate_merge(1,'super_survey2',3,0.99)
-time.sleep(waitingtime)
+# #%% 설문조사 form 클릭
+# searchandclick_byrate_merge(1,'super_survey2',3,0.99)
+# time.sleep(waitingtime)
 
-#%% 설문조사 네 클릭
-searchandclick_twice('super_yes',3)
-time.sleep(waitingtime)
-#%% 설문조사 다음 클릭
-searchandclick_twice('super_next',3)
-time.sleep(waitingtime)
-#%% 설문조사 네 and 다음 클릭
-searchandclick_twice('super_yes',3)
+# #%% 설문조사 네(그냥yes 예=yes2) 클릭
+# searchandclick_twice('super_yes',3)
+# time.sleep(waitingtime)
+# #%% 설문조사 다음 클릭
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+# #%% 설문조사 네 and 다음 클릭
+# searchandclick_twice('super_yes',3)
 
-searchandclick_twice('super_next',3)
-time.sleep(waitingtime)
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
 
-#%% 생일입력칸 클릭
-searchandclick_byrate_merge_twice(2,'super_birth',3,0.9)
-time.sleep(waitingtime)
-#%%
-## 태어난 해 입력
-#1994 입력
-device.input_keyevent(8,1)
-device.input_keyevent(16,1)
-device.input_keyevent(16,1)
-device.input_keyevent(11,1)
-#%%
-searchandclick_twice('super_next',3)
-time.sleep(waitingtime)
-#%% 태어난 달 클릭
-searchandclick_byrate_merge_twice(1,'super_btmonth',3,0.95)
-time.sleep(waitingtime)
-searchandclick_twice('super_next',3)
-time.sleep(waitingtime)
-# %%마지막에 지워줘야해
-save_cap('super_1')
+# #%% 생일입력칸 클릭
+# searchandclick_byrate_merge_twice(2,'super_birth',3,0.9)
+# time.sleep(waitingtime)
+# #%%
+# ## 태어난 해 입력
+# #1994 입력
+# device.input_keyevent(8,1)
+# device.input_keyevent(16,1)
+# device.input_keyevent(16,1)
+# device.input_keyevent(11,1)
+# #%%
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+# #%% 태어난 달 클릭
+# searchandclick_byrate_merge_twice(1,'super_btmonth',3,0.95)
+# time.sleep(waitingtime)
+# #%%
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+# #%% 태어난 날 검색후 입력
+# searchandclick_twice('super_search',3)
+# time.sleep(waitingtime)
+# device.input_keyevent(8,1)
+# device.input_keyevent(9,1)
+# #%%
+# searchandclick_twice('super_next',3)
+# #%%
+# searchandclick_byrate_merge_twice(1,'super_btday',3,0.99)
+# time.sleep(waitingtime)
+# #%%
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+# #%%
+# searchandclick_twice('super_botcut',3)
+# time.sleep(waitingtime)
+# #%%
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+# #%%
+# searchandclick_byposition_twice('super_postn',3,1)
+# time.sleep(waitingtime)
+
+
+# #%%
+# device.input_keyevent(0,1)
+# device.input_keyevent(12,1)
+# device.input_keyevent(15,1)
+# device.input_keyevent(10,1)
+# device.input_keyevent(9,1)
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+
+# #%% 설문조사 예(=yes2) and 다음 클릭 
+# searchandclick_twice('super_yes2',3)
+
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+# #%% 설문조사 남자
+# searchandclick_twice('super_man',3)
+
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+
+# #%% 설문조사 한국어
+# searchandclick_byposition_twice('super_kor',3,1)
+
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+# #%% 직업 검색 후 입력
+# searchandclick_twice('super_search',3)
+# time.sleep(waitingtime)
+# device.input_keyevent(37,1)
+# device.input_keyevent(48,1)
+# device.input_keyevent('KEYCODE_BACK')
+# searchandclick_twice('super_soft',3)
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+# #%% 업무 계열 선택
+# searchandclick_twice('super_adbn',3)
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+
+# #%%
+# searchandclick_twice('super_next',3)
+# time.sleep(waitingtime)
+
+
+# # %%마지막에 지워줘야해
+# save_cap('super_1')
 
 
 # %%
@@ -420,3 +499,5 @@ device.input_keyevent('KEYCODE_APP_SWITCH')
 searchandclick('qnn24_allappclose',3)
 time.sleep(waitingtime)
 
+# %%
+device.input_keyevent('KEYCODE_SLEEP')

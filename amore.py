@@ -297,17 +297,23 @@ waitingtime = 3
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_HOME')
+time.sleep(waitingtime)
 # # %%
 # device.input_keyevent('KEYCODE_BACK')
 # %%
 # 앱실행
 searchandclick('amore_stap',3)
-time.sleep(waitingtime*3)
+time.sleep(waitingtime*2)
 
+#%%업데이트 끄기
+searchandclick('amore_update',3)
+time.sleep(waitingtime)
 
 # %%
 searchandclick('amore_close',3)
@@ -324,11 +330,7 @@ time.sleep(waitingtime)
 #  스와이프해서 아래로 내리기
 device.input_swipe(0,1000,0,0,1000)
 #%%
-searchandclick('amore_ckbn',3) ##만들어줘야해
-time.sleep(waitingtime)
-
-#%%
-searchandclick('amore_ckbn2',3) ##만들어줘야해 24시 이후에
+searchandclick('amore_ckbn',3)
 time.sleep(waitingtime)
 
 
@@ -338,14 +340,15 @@ device.input_keyevent('KEYCODE_APP_SWITCH')
 searchandclick('qnn24_allappclose',3)
 time.sleep(waitingtime)
 
-
+# %%
+device.input_keyevent('KEYCODE_SLEEP')
 
 
 
 
 
 #%% 마지막에 지워야해
-save_cap('amore_1')
+# save_cap('amore_1')
 # %%
 # # 스와이프해서 아래로 내리기
 # device.input_swipe(0,1000,0,0,1000)

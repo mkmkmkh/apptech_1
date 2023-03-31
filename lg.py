@@ -297,10 +297,13 @@ waitingtime = 3
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_WAKEUP')
+time.sleep(0.5)
 # %%
 device.input_keyevent('KEYCODE_HOME')
+time.sleep(waitingtime)
 # # %%
 # device.input_keyevent('KEYCODE_BACK')
 # %%
@@ -348,3 +351,5 @@ device.input_keyevent('KEYCODE_APP_SWITCH')
 searchandclick('qnn24_allappclose',3)
 time.sleep(waitingtime)
 
+# %%
+device.input_keyevent('KEYCODE_SLEEP')
