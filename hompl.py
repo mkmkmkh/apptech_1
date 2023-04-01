@@ -320,36 +320,27 @@ time.sleep(waitingtime)
 
 #%%
 # 앱실행
-searchandclick('wyd_1',3)
+searchandclick('hompl_1',3)
 time.sleep(waitingtime)
 
 # %%
-n=5#클릭할 총 사진 수로 변경
+n=10#클릭할 총 사진 수로 변경
 for i in range(2, n):
-    searchandclick(f'wyd_{i}',3)
+    searchandclick(f'hompl_{i}',3)
     time.sleep(waitingtime)
-    if i == 2:
-        for j in range(2):
-            device.input_swipe(850,850,250,850,1000)
-            time.sleep(0.5)
-    if i == 3:
-        device.input_swipe(0,1000,0,0,1000)
-        time.sleep(waitingtime)
-        
 
-#3전에 우측 스와이프 2-4번?
-#4전에 스와이프 아래로
+
 
 # %%마지막에 지워줘야해
 # 스크린샷 save 순서대로 하기위해 한번에 쭉 실행하는 코드#############
 
-# k=0
-# while True:
-#     if keyboard.is_pressed('\t'):
-#         k=k+1
-#         save_cap(f'wyd_{k}_t')
-#     if keyboard.is_pressed('esc'):
-#         break
+k=0
+while True:
+    if keyboard.is_pressed('\t'):
+        k=k+1
+        save_cap(f'hompl_{k}_t')
+    if keyboard.is_pressed('esc'):
+        break
 
 # %%
 # # 스와이프해서 아래로 내리기
@@ -366,7 +357,6 @@ time.sleep(waitingtime)
 
 # %%
 device.input_keyevent('KEYCODE_SLEEP')
-
 #%% 다 돌아갔다는 로그 메세지 기록
 filename = __file__
 now = datetime.now()

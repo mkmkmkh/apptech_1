@@ -320,13 +320,13 @@ time.sleep(waitingtime)
 
 #%%
 # 앱실행
-searchandclick('inter1_1',3)
+searchandclick('inter_1',3)
 time.sleep(waitingtime)
 
 # %%
-n=10#클릭할 총 사진 수로 변경
+n=5#클릭할 총 사진 수로 변경
 for i in range(2, n):
-    searchandclick(f'inter1_{i}',3)
+    searchandclick(f'inter_{i}',3)
     time.sleep(waitingtime)
 
 
@@ -334,13 +334,13 @@ for i in range(2, n):
 # %%마지막에 지워줘야해
 # 스크린샷 save 순서대로 하기위해 한번에 쭉 실행하는 코드#############
 
-k=0
-while True:
-    if keyboard.is_pressed('\t'):
-        k=k+1
-        save_cap(f'inter1_{k}_t')
-    if keyboard.is_pressed('esc'):
-        break
+# k=0
+# while True:
+#     if keyboard.is_pressed('\t'):
+#         k=k+1
+#         save_cap(f'inter_{k}_t')
+#     if keyboard.is_pressed('esc'):
+#         break
 
 # %%
 # # 스와이프해서 아래로 내리기
